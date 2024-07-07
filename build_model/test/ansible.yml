@@ -1,0 +1,42 @@
+---
+- name: Create AWS Kinesis Stream and Firehose
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    kinesis_stream_name: "MyKinesisStream"
+    kinesis_firehose_name: "MyKinesisFirehose"
+    s3_bucket_name: "my-kinesis-bucket"
+    role_arn: "arn:aws:iam::123456789012:role/firehose_delivery_role"
+  
+  tasks:
+    - name: Create Kinesis Stream
+      aws_kinesis_stream:
+        name: "{{ kinesis_stream_name }}"
+        shard_count: 1
+        state: present
+        wait: yes
+      register: kinesis_stream
+
+    - name: Create Kinesis Firehose
+      aws_kinesis_firehose:
+        name: "{{ kinesis_firehose_name }}"
+        delivery_stream_type: DirectPut
+        s3_configuration:
+          role_arn: "{{ role_arn }}"
+          bucket_arn: "arn:aws:s3:::{{ s3_bucket_name }}"
+          prefix: "logs/"
+          buffering_hints:
+            interval_in_seconds: 300
+            size_in_mbs: 5
+          compression_format: UNCOMPRESSED
+        state: present
+      register: kinesis_firehose
+
+    - name: Print Kinesis Stream details
+      debug:
+        msg: "Kinesis Stream created: {{ kinesis_stream.stream_description.stream_name }}"
+
+    - name: Print Kinesis Firehose details
+      debug:
+        msg: "Kinesis Firehose created: {{ kinesis_firehose.delivery_stream_description.delivery_stream_name }}"

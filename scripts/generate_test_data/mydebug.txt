@@ -1,0 +1,32 @@
+Sure, here is an example of a Terraform configuration in JSON format for AWS EC2:
+
+```json
+{
+  "provider": {
+    "aws": {
+      "region": "us-west-2",
+      "access_key": "YOUR_ACCESS_KEY",
+      "secret_key": "YOUR_SECRET_KEY"
+    }
+  },
+  "resource": {
+    "aws_instance": {
+      "example": {
+        "ami": "ami-0c94855ba95c574c8",
+        "instance_type": "t2.micro",
+        "subnet_id": "subnet-lgh674f3",
+        "vpc_security_group_ids": ["sg-091b8067244c16f6a"],
+        "tags": {
+          "Name": "example_instance"
+        },
+        "root_block_device": {
+          "delete_on_termination": true,
+          "volume_size": 30
+        }
+      }
+    }
+  }
+}
+```
+
+Please replace `"YOUR_ACCESS_KEY"` and `"YOUR_SECRET_KEY"` with your actual AWS access key and secret key. And be careful not to expose these keys publicly. Also replace `"ami-0c94855ba95c574c8"`, `"subnet-lgh674f3"`, and `"sg-091b8067244c16f6a"` with your own EC2 AMI ID, subnet ID, and security group ID, respectively.

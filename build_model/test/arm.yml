@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs",
+      "apiVersion": "2019-06-01-preview",
+      "name": "myStreamingJob",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "sku": {
+          "name": "Standard"
+        },
+        "outputErrorPolicy": "Drop",
+        "eventsLateArrivalMaxDelayInSeconds": 5,
+        "eventsOutOfOrderMaxDelayInSeconds": 0,
+        "eventsOutOfOrderPolicy": "Drop",
+        "outputStartMode": "JobStartTime",
+        "functions": [],
+        "inputs": [
+          {
+            "name": "input1",
+            "properties": {
+              "type": "Stream",
+              "datasource": {
+                "type": "Microsoft.ServiceBus/EventHub",
+                "properties": {
+                  "serviceBusNamespace": "yourNamespace",
+                  "sharedAccessPolicyName": "yourPolicy",
+                  "sharedAccessPolicyKey": "yourKey",
+                  "eventHubName": "yourEventHubName"
+                }
+              }
+            }
+          }
+        ],
+        "transformation": {
+          "name": "transformation1",
+          "properties": {
+            "streamingUnits": 1,
+            "query": "SELECT * INTO output1 FROM input1"
+          }
+        },
+        "outputs": [
+          {
+            "name": "output1",
+            "properties": {
+              "datasource": {
+                "type": "Microsoft.Storage/Blob",
+                "properties": {
+                  "storageAccounts": [
+                    {
+                      "accountName": "yourStorageAccountName",
+                      "accountKey": "yourStorageAccountKey"
+                    }
+                  ],
+                  "container": "yourContainerName",
+                  "pathPattern": "{date}/{time}",
+                  "dateFormat": "yyyy/MM/dd",
+                  "timeFormat": "HH"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

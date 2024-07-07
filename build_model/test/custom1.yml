@@ -1,0 +1,19 @@
+# config.yml
+app:
+  name: MyApp
+  version: 1.0.0
+
+server:
+  host: localhost
+  port: 8080
+
+database:
+  type: postgres
+  host: db.example.com
+  port: 5432
+  username: dbuser
+  password: secretpassword
+  name: myapp_db
+
+logging:
+  lev

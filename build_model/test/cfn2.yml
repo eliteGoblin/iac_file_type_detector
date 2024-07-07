@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: MyKinesisStream
+      ShardCount: 1
+
+  KinesisFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties: 
+      DeliveryStreamName: MyKinesisFirehose
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::my-kinesis-bucket
+        Prefix: logs/
+        ErrorOutputPrefix: errors/
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 5
+        CompressionFormat: UNCOMPRESSED
+        RoleARN: arn:aws:iam::123456789012:role/firehose_delivery_role
+
+Outputs:
+  KinesisStreamName:
+    Description: Name of the Kinesis stream
+    Value: !Ref KinesisStream
+  KinesisFirehoseName:
+    Description: Name of the Kinesis Firehose delivery stream
+    Value: !Ref KinesisFirehose

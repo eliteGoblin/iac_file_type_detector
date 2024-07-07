@@ -1,0 +1,61 @@
+# nested_config.yml
+application:
+  name: NestedApp
+  version: 2.1.0
+  environment: production
+
+server:
+  host: 0.0.0.0
+  port: 9090
+  ssl:
+    enabled: true
+    certificate: /etc/ssl/certs/nestedapp.crt
+    key: /etc/ssl/private/nestedapp.key
+
+database:
+  default:
+    type: postgres
+    host: db.example.com
+    port: 5432
+    credentials:
+      username: dbuser
+      password: secretpassword
+    name: nestedapp_db
+  analytics:
+    type: mongo
+    host: analytics.example.com
+    port: 27017
+    credentials:
+      username: analyticsuser
+      password: analyticspassword
+    name: nestedapp_analytics_db
+
+logging:
+  level: DEBUG
+  handlers:
+    file:
+      class: logging.FileHandler
+      formatter: detailed
+      filename: /var/log/nestedapp.log
+    console:
+      class: logging.StreamHandler
+      formatter: simple
+
+formatters:
+  detailed:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  simple:
+    format: "%(levelname)s - %(message)s"
+
+features:
+  featureA:
+    enabled: true
+    settings:
+      option1: value1
+      option2: value2
+  featureB:
+    enabled: false
+  featureC:
+    enabled: true
+    settings:
+      subOption:

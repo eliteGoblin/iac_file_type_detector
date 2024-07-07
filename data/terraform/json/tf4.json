@@ -1,0 +1,27 @@
+{
+  "provider": {
+    "aws": {
+      "region": "us-west-2"
+    }
+  },
+  "resource": {
+    "aws_s3_bucket": {
+      "b": {
+        "bucket": "my-tf-test-bucket",
+        "acl": "private",
+        "versioning": {
+          "enabled": true
+        },
+        "tags": {
+          "Name": "MyBucket"
+        }
+      }
+    },
+    "aws_s3_bucket_policy": {
+      "b_policy": {
+        "bucket": "${aws_s3_bucket.b.id}",
+        "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"s3:GetObject\",\n      \"Effect\": \"Allow\",\n      \"Resource\": \"${aws_s3_bucket.b.arn}/*\",\n      \"Principal\": \"*\"\n    }\n  ]\n}"
+      }
+    }
+  }
+}

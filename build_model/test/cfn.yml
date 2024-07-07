@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  AWS CloudFormation Template
+  This template creates an S3 bucket.
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'my-s3-bucket-${AWS::AccountId}-${AWS::Region}'
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  BucketName:
+    Description: The name of the S3 bucket
+    Value: !Ref S3Bucket
+    Export:
+      Name: S3BucketName
+
+  BucketArn:
+    Description: The ARN of the S3 bucket
+    Value: !GetAtt S3Bucket.Arn
+    Export:
+      Name: S3BucketArn
